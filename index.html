@@ -1,0 +1,3104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Bot Pro Enhanced - Professional Trading Automation</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Professional Enhanced CSS Styles -->
+    <style>
+        :root {
+            /* Professional Color Palette */
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #dbeafe;
+            --secondary: #10b981;
+            --secondary-hover: #059669;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --warning: #f59e0b;
+            --warning-hover: #d97706;
+            --dark: #111827;
+            --dark-secondary: #1f2937;
+            --dark-tertiary: #374151;
+            --light: #f9fafb;
+            --white: #ffffff;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --text-light: #9ca3af;
+            --border: #e5e7eb;
+            --success-bg: #d1fae5;
+            --success-text: #065f46;
+            --danger-bg: #fee2e2;
+            --danger-text: #991b1b;
+            --warning-bg: #fed7aa;
+            --warning-text: #92400e;
+            --info-bg: #dbeafe;
+            --info-text: #1e40af;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Professional Header */
+        .header {
+            background: var(--white);
+            padding: 24px 32px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 24px;
+            border-top: 4px solid var(--primary);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .version-badge {
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 12px;
+        }
+
+        .header-status {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--light);
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-indicator.active {
+            background: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .status-indicator.inactive {
+            background: var(--danger-bg);
+            color: var(--danger-text);
+        }
+
+        .status-indicator.warning {
+            background: var(--warning-bg);
+            color: var(--warning-text);
+        }
+
+        .pulse {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .pulse.green {
+            background: var(--secondary);
+        }
+
+        .pulse.red {
+            background: var(--danger);
+        }
+
+        .pulse.yellow {
+            background: var(--warning);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+
+        /* Enhanced Dashboard */
+        .dashboard {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 24px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .dashboard-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        /* Enhanced Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .quick-action-card {
+            background: linear-gradient(135deg, var(--light) 0%, var(--white) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .quick-action-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .quick-action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .quick-action-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .quick-action-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .quick-action-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .quick-action-subtitle {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        .quick-action-trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .quick-action-trend.positive {
+            background: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .quick-action-trend.negative {
+            background: var(--danger-bg);
+            color: var(--danger-text);
+        }
+
+        /* Main Control Buttons */
+        .main-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .control-btn {
+            padding: 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .control-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .control-btn.start {
+            background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);
+            color: white;
+        }
+
+        .control-btn.start:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+
+        .control-btn.stop {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .control-btn.stop:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Enhanced Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .stat-change {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .stat-change.positive {
+            color: var(--secondary);
+        }
+
+        .stat-change.negative {
+            color: var(--danger);
+        }
+
+        .stat-tooltip {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 16px;
+            height: 16px;
+            background: var(--light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--text-secondary);
+            cursor: help;
+        }
+
+        /* Navigation Tabs */
+        .tabs {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .tab-btn-badge {
+            background: var(--danger);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .form-help {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--white);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        /* Position Size Selector */
+        .position-size-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .position-size-option {
+            padding: 16px;
+            text-align: center;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .position-size-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .position-size-option.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .position-size-option .option-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .position-size-option .option-desc {
+            font-size: 10px;
+            opacity: 0.8;
+        }
+
+        /* Enhanced Margin Panel */
+        .margin-panel {
+            background: linear-gradient(135deg, var(--light) 0%, var(--white) 100%);
+            padding: 24px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .margin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .margin-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .margin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+        }
+
+        .margin-item {
+            background: var(--white);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .margin-item-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .margin-item-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .margin-item-bar {
+            height: 4px;
+            background: var(--light);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .margin-item-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .margin-item-fill.safe {
+            background: var(--secondary);
+        }
+
+        .margin-item-fill.warning {
+            background: var(--warning);
+        }
+
+        .margin-item-fill.danger {
+            background: var(--danger);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-success {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: var(--secondary-hover);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: var(--danger-hover);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: var(--warning-hover);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--light);
+        }
+
+        .btn-lg {
+            padding: 14px 28px;
+            font-size: 16px;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Button Group */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .alert-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-info {
+            background: var(--info-bg);
+            color: var(--info-text);
+        }
+
+        .alert-success {
+            background: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .alert-warning {
+            background: var(--warning-bg);
+            color: var(--warning-text);
+        }
+
+        .alert-danger {
+            background: var(--danger-bg);
+            color: var(--danger-text);
+        }
+
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 16px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table th {
+            background: var(--light);
+            padding: 12px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .table td {
+            padding: 12px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table tbody tr:hover {
+            background: var(--light);
+        }
+
+        /* Progress Bars */
+        .progress {
+            height: 8px;
+            background: var(--light);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-bar.success {
+            background: var(--secondary);
+        }
+
+        .progress-bar.warning {
+            background: var(--warning);
+        }
+
+        .progress-bar.danger {
+            background: var(--danger);
+        }
+
+        /* Risk Indicators */
+        .risk-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .risk-indicator.safe {
+            background: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .risk-indicator.warning {
+            background: var(--warning-bg);
+            color: var(--warning-text);
+        }
+
+        .risk-indicator.danger {
+            background: var(--danger-bg);
+            color: var(--danger-text);
+        }
+
+        /* Console */
+        .console {
+            background: var(--dark);
+            color: #10b981;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+        }
+
+        .console-line {
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .console-error { color: #ef4444; }
+        .console-warning { color: #f59e0b; }
+        .console-info { color: #3b82f6; }
+        .console-success { color: #10b981; }
+
+        /* Toggle Switch */
+        .toggle-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--light);
+            border: 1px solid var(--border);
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 2px;
+            background: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
+        }
+
+        input:checked + .toggle-slider {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Range Slider */
+        .range-slider {
+            margin: 20px 0;
+        }
+
+        .range-slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .range-slider-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .range-slider-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .range-input {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--light);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .range-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+
+        .range-input::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+
+        /* Breakeven Selector */
+        .breakeven-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .breakeven-option {
+            padding: 16px;
+            text-align: center;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .breakeven-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .breakeven-option.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .breakeven-option .target-number {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .breakeven-option .target-label {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        /* Partial Close Settings */
+        .partial-close-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .partial-close-item {
+            background: var(--light);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .partial-close-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .partial-close-input {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Profile Selector */
+        .profile-selector {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-select {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: var(--white);
+            margin: 10% auto;
+            padding: 32px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-xl);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .modal-close {
+            font-size: 28px;
+            color: var(--text-light);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--light);
+            color: var(--danger);
+        }
+
+        /* Notification Toast */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            min-width: 300px;
+            max-width: 500px;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-xl);
+            z-index: 9999;
+            animation: slideInRight 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 12px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .main-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .breakeven-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .position-size-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid var(--light);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-light);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Professional Header -->
+        <div class="header">
+            <div class="header-content">
+                <div>
+                    <h1>
+                        ⚡ Trading Bot Pro Enhanced
+                        <span class="version-badge">v2.0.0 PRO</span>
+                    </h1>
+                    <div class="header-subtitle">Advanced Professional Trading Automation System</div>
+                </div>
+                <div class="header-status">
+                    <div id="bot-status" class="status-indicator inactive">
+                        <div class="pulse red"></div>
+                        <span>Bot Offline</span>
+                    </div>
+                    <div id="trading-status" class="status-indicator inactive">
+                        <div class="pulse red"></div>
+                        <span>Trading: Inactive</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div class="dashboard">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">📊 Enhanced Dashboard</h2>
+                <div id="current-time" style="color: var(--text-secondary); font-size: 14px;"></div>
+            </div>
+
+            <!-- Main Controls -->
+            <div class="main-controls">
+                <button id="start-bot-btn" class="control-btn start" onclick="startBot()">
+                    <span style="font-size: 24px;">▶️</span>
+                    <span>START BOT</span>
+                </button>
+                <button id="stop-bot-btn" class="control-btn stop" onclick="stopBot()" disabled>
+                    <span style="font-size: 24px;">⏹️</span>
+                    <span>STOP BOT</span>
+                </button>
+            </div>
+
+            <!-- Enhanced Quick Actions -->
+            <div class="quick-actions">
+                <div class="quick-action-card">
+                    <div class="quick-action-icon">💰</div>
+                    <div class="quick-action-title">Balance</div>
+                    <div class="quick-action-value" id="quick-balance">$0.00</div>
+                    <div class="quick-action-subtitle">Available USDT</div>
+                    <div class="quick-action-trend positive" id="balance-trend">
+                        <span>↑</span> <span id="balance-change">0%</span>
+                    </div>
+                </div>
+                <div class="quick-action-card">
+                    <div class="quick-action-icon">📈</div>
+                    <div class="quick-action-title">Today's P&L</div>
+                    <div class="quick-action-value" id="quick-pnl">$0.00</div>
+                    <div class="quick-action-subtitle">Profit/Loss</div>
+                    <div class="quick-action-trend" id="pnl-trend">
+                        <span id="pnl-percentage">0%</span>
+                    </div>
+                </div>
+                <div class="quick-action-card">
+                    <div class="quick-action-icon">🎯</div>
+                    <div class="quick-action-title">Win Rate</div>
+                    <div class="quick-action-value" id="quick-winrate">0%</div>
+                    <div class="quick-action-subtitle">Success Rate</div>
+                    <div class="quick-action-trend" id="winrate-trend">
+                        <span id="total-trades">0 trades</span>
+                    </div>
+                </div>
+                <div class="quick-action-card">
+                    <div class="quick-action-icon">📊</div>
+                    <div class="quick-action-title">Positions</div>
+                    <div class="quick-action-value" id="quick-positions">0/5</div>
+                    <div class="quick-action-subtitle">Open/Max</div>
+                    <div class="quick-action-trend" id="positions-trend">
+                        <span id="positions-value">$0</span>
+                    </div>
+                </div>
+                <div class="quick-action-card">
+                    <div class="quick-action-icon">🛡️</div>
+                    <div class="quick-action-title">Risk Status</div>
+                    <div class="quick-action-value" id="quick-risk">Safe</div>
+                    <div class="quick-action-subtitle">Trading Status</div>
+                    <div class="quick-action-trend" id="risk-trend">
+                        <span id="risk-level">Low</span>
+                    </div>
+                </div>
+                <div class="quick-action-card">
+                    <div class="quick-action-icon">📉</div>
+                    <div class="quick-action-title">Drawdown</div>
+                    <div class="quick-action-value" id="quick-drawdown">0%</div>
+                    <div class="quick-action-subtitle">From Peak</div>
+                    <div class="quick-action-trend" id="drawdown-trend">
+                        <span id="peak-balance">Peak: $0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Margin Panel -->
+            <div class="margin-panel">
+                <div class="margin-header">
+                    <h3 class="margin-title">
+                        <span>💳</span> Margin & Risk Management
+                    </h3>
+                    <button class="btn btn-sm btn-outline" onclick="refreshMarginInfo()">
+                        🔄 Refresh
+                    </button>
+                </div>
+                
+                <div class="margin-grid">
+                    <div class="margin-item">
+                        <div class="margin-item-label">Margin Level</div>
+                        <div class="margin-item-value" id="margin-level">100%</div>
+                        <div class="margin-item-bar">
+                            <div class="margin-item-fill safe" id="margin-level-bar" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="margin-item">
+                        <div class="margin-item-label">Margin Used</div>
+                        <div class="margin-item-value" id="margin-used">$0</div>
+                        <div class="margin-item-bar">
+                            <div class="margin-item-fill" id="margin-used-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="margin-item">
+                        <div class="margin-item-label">Free Margin</div>
+                        <div class="margin-item-value" id="free-margin">$0</div>
+                        <div class="margin-item-bar">
+                            <div class="margin-item-fill safe" id="free-margin-bar" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="margin-item">
+                        <div class="margin-item-label">Deleverage Risk</div>
+                        <div class="margin-item-value" id="deleverage-risk">Safe</div>
+                        <div class="margin-item-bar">
+                            <div class="margin-item-fill safe" id="deleverage-bar" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-time Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <span>📈</span> Active Positions
+                    </div>
+                    <div class="stat-value" id="active-positions">0</div>
+                    <div class="stat-tooltip" title="Number of currently open positions">?</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <span>🎯</span> Today's Trades
+                    </div>
+                    <div class="stat-value" id="today-trades">0/10</div>
+                    <div class="stat-tooltip" title="Trades executed today / Daily limit">?</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <span>💸</span> Daily Loss
+                    </div>
+                    <div class="stat-value" id="daily-loss">$0/$100</div>
+                    <div class="progress">
+                        <div class="progress-bar" id="daily-loss-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <span>📊</span> Profit Factor
+                    </div>
+                    <div class="stat-value" id="profit-factor">0.00</div>
+                    <div class="stat-tooltip" title="Ratio of gross profits to gross losses">?</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <span>🔥</span> Consecutive Losses
+                    </div>
+                    <div class="stat-value" id="consecutive-losses">0/3</div>
+                    <div class="stat-tooltip" title="Current losing streak / Max allowed">?</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <span>📡</span> Signals
+                    </div>
+                    <div class="stat-value" id="signal-stats">
+                        <span class="risk-indicator safe">0/0</span>
+                    </div>
+                    <div class="stat-tooltip" title="Executed / Received signals">?</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'setup')">
+                <span>🚀</span> Quick Setup
+            </button>
+            <button class="tab-btn" onclick="openTab(event, 'trading')">
+                <span>⚙️</span> Trading Settings
+                <span class="tab-btn-badge" id="trading-badge" style="display: none;">!</span>
+            </button>
+            <button class="tab-btn" onclick="openTab(event, 'risk')">
+                <span>🛡️</span> Risk Management
+            </button>
+            <button class="tab-btn" onclick="openTab(event, 'positions')">
+                <span>📊</span> Positions
+                <span class="tab-btn-badge" id="positions-badge" style="display: none;">0</span>
+            </button>
+            <button class="tab-btn" onclick="openTab(event, 'profiles')">
+                <span>👤</span> Profiles
+            </button>
+            <button class="tab-btn" onclick="openTab(event, 'history')">
+                <span>📈</span> History
+            </button>
+            <button class="tab-btn" onclick="openTab(event, 'console')">
+                <span>💻</span> Console
+            </button>
+        </div>
+
+        <!-- Setup Tab -->
+        <div id="setup" class="tab-content active">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <span>🚀</span> Quick Setup Guide
+                    </h3>
+                </div>
+
+                <div class="alert alert-info">
+                    <div class="alert-icon">ℹ️</div>
+                    <div class="alert-content">
+                        <strong>Welcome to Trading Bot Pro Enhanced!</strong><br>
+                        Professional automated trading with advanced risk management and position sizing.
+                    </div>
+                </div>
+
+                <!-- Step 1: API Configuration -->
+                <div class="card" style="background: var(--light);">
+                    <h4 style="margin-bottom: 20px; color: var(--primary);">
+                        Step 1: Connect Your Bybit Account
+                    </h4>
+                    
+                    <div class="alert alert-warning">
+                        <div class="alert-icon">⚠️</div>
+                        <div class="alert-content">
+                            <strong>Security Notice:</strong> We recommend using Demo Trading API keys for testing!<br>
+                            Get demo keys from: bybitglobal.com → Demo Trading → API Management
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">API Key</label>
+                            <input type="text" id="api-key" class="form-input" placeholder="Enter your Bybit API Key">
+                            <div class="form-help">Your unique API identifier from Bybit exchange</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">API Secret</label>
+                            <input type="password" id="api-secret" class="form-input" placeholder="Enter your API Secret">
+                            <div class="form-help">Keep this secret! Never share with anyone</div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Trading Mode</label>
+                            <div style="display: flex; gap: 20px; margin-top: 8px;">
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="radio" name="mode" value="demo" checked id="mode-demo">
+                                    <span>🎮 Demo (Recommended for testing)</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="radio" name="mode" value="live" id="mode-live">
+                                    <span>💰 Live Trading (Real money)</span>
+                                </label>
+                            </div>
+                            <div class="form-help">Demo mode uses testnet for risk-free practice</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Platform</label>
+                            <div style="display: flex; gap: 20px; margin-top: 8px;">
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="radio" name="platform" value="bybitglobal" checked id="platform-global">
+                                    <span>🌍 Bybit Global (Most users)</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="radio" name="platform" value="bybit" id="platform-original">
+                                    <span>🏠 Bybit Original (Legacy)</span>
+                                </label>
+                            </div>
+                            <div class="form-help">Select your Bybit platform region</div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-lg" onclick="testConnection()">
+                        🔌 Test Connection
+                    </button>
+                    <button class="btn btn-success btn-lg" onclick="saveConfig()" style="margin-left: 12px;">
+                        💾 Save Configuration
+                    </button>
+
+                    <div id="connection-status" class="alert alert-info" style="margin-top: 20px;">
+                        <div class="alert-icon">🔌</div>
+                        <div class="alert-content">Connection status will appear here</div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Signal Channel -->
+                <div class="card" style="background: var(--light);">
+                    <h4 style="margin-bottom: 20px; color: var(--primary);">
+                        Step 2: Premium Signal Channel
+                    </h4>
+                    
+                    <div class="alert alert-success">
+                        <div class="alert-icon">✅</div>
+                        <div class="alert-content">
+                            <strong>Premium Signal Channel Connected!</strong><br>
+                            Professional trading signals from verified admin channel.<br>
+                            Channel: <code>Premium Trading Signals</code>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="toggle-wrapper">
+                            <span>Auto-Execute Signals</span>
+                            <label class="toggle">
+                                <input type="checkbox" id="auto-execute" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span id="auto-execute-status" style="color: var(--secondary);">Enabled</span>
+                        </div>
+                        <div class="form-help">Automatically execute all received trading signals without manual intervention</div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Start Trading -->
+                <div class="card" style="background: var(--light);">
+                    <h4 style="margin-bottom: 20px; color: var(--primary);">
+                        Step 3: Start Automated Trading
+                    </h4>
+                    
+                    <div class="alert alert-info">
+                        <div class="alert-icon">💡</div>
+                        <div class="alert-content">
+                            Once configured, click <strong>START BOT</strong> to begin automated trading!<br>
+                            The bot will monitor signals and execute trades based on your settings.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Trading Settings Tab -->
+        <div id="trading" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <span>⚙️</span> Advanced Trading Configuration
+                    </h3>
+                </div>
+
+                <!-- Position Sizing Section -->
+                <div class="card" style="background: var(--light);">
+                    <h4 style="margin-bottom: 16px;">📊 Position Sizing Strategy</h4>
+                    
+                    <div class="position-size-selector">
+                        <div class="position-size-option" onclick="selectPositionSizeType('fixed')" data-type="fixed">
+                            <div class="option-title">💵 Fixed Amount</div>
+                            <div class="option-desc">Use constant USDT amount</div>
+                        </div>
+                        <div class="position-size-option selected" onclick="selectPositionSizeType('percentage')" data-type="percentage">
+                            <div class="option-title">📈 % of Balance</div>
+                            <div class="option-desc">Dynamic based on account</div>
+                        </div>
+                        <div class="position-size-option" onclick="selectPositionSizeType('dynamic')" data-type="dynamic">
+                            <div class="option-title">🎯 Kelly Criterion</div>
+                            <div class="option-desc">Optimal sizing algorithm</div>
+                        </div>
+                    </div>
+
+                    <div id="position-size-settings" style="margin-top: 20px;">
+                        <div class="grid-2">
+                            <div class="form-group" id="fixed-amount-group">
+                                <label class="form-label">Fixed Amount (USDT)</label>
+                                <input type="number" id="fixed-amount" class="form-input" value="100" min="10">
+                                <div class="form-help">Amount to use for each trade when using fixed sizing</div>
+                            </div>
+                            
+                            <div class="form-group" id="percentage-group">
+                                <label class="form-label">Percentage of Balance (%)</label>
+                                <div class="range-slider">
+                                    <div class="range-slider-header">
+                                        <span class="range-slider-label">Position Size</span>
+                                        <span class="range-slider-value" id="percentage-value">10%</span>
+                                    </div>
+                                    <input type="range" id="percentage-slider" class="range-input" min="1" max="50" value="10">
+                                </div>
+                                <div class="form-help">Percentage of available balance to use per trade</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card" style="background: var(--light);">
+                        <h4 style="margin-bottom: 16px;">⚔️ Leverage & Limits</h4>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Leverage</label>
+                            <div class="range-slider">
+                                <div class="range-slider-header">
+                                    <span class="range-slider-label">Leverage</span>
+                                    <span class="range-slider-value" id="leverage-value">10x</span>
+                                </div>
+                                <input type="range" id="leverage" class="range-input" min="1" max="100" value="10">
+                            </div>
+                            <div class="form-help">Trading leverage multiplier (higher = more risk & reward)</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Max Position Size (USDT)</label>
+                            <input type="number" id="max-position" class="form-input" value="1000" min="100">
+                            <div class="form-help">Maximum allowed position value to prevent overexposure</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Max Open Positions</label>
+                            <input type="number" id="max-open-positions" class="form-input" value="5" min="1" max="20">
+                            <div class="form-help">Maximum number of simultaneous open positions</div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="background: var(--light);">
+                        <h4 style="margin-bottom: 16px;">🤖 Automation Features</h4>
+                        
+                        <div class="form-group">
+                            <div class="toggle-wrapper">
+                                <span>Auto Set TP/SL</span>
+                                <label class="toggle">
+                                    <input type="checkbox" id="auto-tp-sl" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="form-help">Automatically set take profit and stop loss orders</div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="toggle-wrapper">
+                                <span>Auto Breakeven</span>
+                                <label class="toggle">
+                                    <input type="checkbox" id="auto-breakeven" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="form-help">Move stop loss to entry price after reaching target</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Breakeven Trigger Target</label>
+                            <div class="breakeven-selector">
+                                <div class="breakeven-option selected" onclick="selectBreakevenTarget(1)" data-target="1">
+                                    <div class="target-number">TP1</div>
+                                    <div class="target-label">Conservative</div>
+                                </div>
+                                <div class="breakeven-option" onclick="selectBreakevenTarget(2)" data-target="2">
+                                    <div class="target-number">TP2</div>
+                                    <div class="target-label">Balanced</div>
+                                </div>
+                                <div class="breakeven-option" onclick="selectBreakevenTarget(3)" data-target="3">
+                                    <div class="target-number">TP3</div>
+                                    <div class="target-label">Aggressive</div>
+                                </div>
+                                <div class="breakeven-option" onclick="selectBreakevenTarget(4)" data-target="4">
+                                    <div class="target-number">TP4</div>
+                                    <div class="target-label">Maximum</div>
+                                </div>
+                            </div>
+                            <div class="form-help">Which target triggers breakeven stop loss movement</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Features -->
+                <div class="card" style="background: var(--light);">
+                    <h4 style="margin-bottom: 16px;">🚀 Advanced Features</h4>
+                    
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <div class="toggle-wrapper">
+                                <span>Trailing Stop Loss</span>
+                                <label class="toggle">
+                                    <input type="checkbox" id="trailing-stop" onchange="toggleTrailingStop()">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <input type="number" id="trailing-stop-percentage" class="form-input" value="2" min="0.5" max="10" step="0.5" style="margin-top: 8px; display: none;">
+                            <div class="form-help">Automatically adjust stop loss as price moves in your favor</div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="toggle-wrapper">
+                                <span>Partial Close</span>
+                                <label class="toggle">
+                                    <input type="checkbox" id="partial-close" checked onchange="togglePartialClose()">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="partial-close-grid" id="partial-close-settings">
+                                <div class="partial-close-item">
+                                    <div class="partial-close-label">TP1</div>
+                                    <input type="number" class="partial-close-input" id="partial-tp1" value="25" min="10" max="100">
+                                </div>
+                                <div class="partial-close-item">
+                                    <div class="partial-close-label">TP2</div>
+                                    <input type="number" class="partial-close-input" id="partial-tp2" value="50" min="10" max="100">
+                                </div>
+                                <div class="partial-close-item">
+                                    <div class="partial-close-label">TP3</div>
+                                    <input type="number" class="partial-close-input" id="partial-tp3" value="75" min="10" max="100">
+                                </div>
+                            </div>
+                            <div class="form-help">Close position partially at each target (% of position)</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Profit Protection (%)</label>
+                            <input type="number" id="profit-protection" class="form-input" value="80" min="50" max="100">
+                            <div class="form-help">Protect this % of maximum profit reached</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-success btn-lg" onclick="saveTradingSettings()">
+                    💾 Save Trading Settings
+                </button>
+            </div>
+        </div>
+
+        <!-- Enhanced Risk Management Tab -->
+        <div id="risk" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <span>🛡️</span> Advanced Risk Management & Protection
+                    </h3>
+                </div>
+
+                <div class="alert alert-warning">
+                    <div class="alert-icon">⚠️</div>
+                    <div class="alert-content">
+                        <strong>Critical Settings:</strong> These parameters protect your capital from excessive losses.<br>
+                        Configure carefully based on your risk tolerance and account size.
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card" style="background: var(--light);">
+                        <h4 style="margin-bottom: 16px;">💸 Loss Limits</h4>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Max Daily Loss (USDT)</label>
+                            <input type="number" id="max-daily-loss" class="form-input" value="100" min="10">
+                            <div class="form-help">Stop trading after losing this amount in one day</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Max Weekly Loss (USDT)</label>
+                            <input type="number" id="max-weekly-loss" class="form-input" value="500" min="50">
+                            <div class="form-help">Stop trading after losing this amount in one week</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Max Loss % of Balance</label>
+                            <input type="number" id="max-loss-percentage" class="form-input" value="10" min="1" max="50">
+                            <div class="form-help">Stop if daily loss exceeds this percentage of total balance</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Max Drawdown (%)</label>
+                            <input type="number" id="max-drawdown" class="form-input" value="15" min="5" max="50">
+                            <div class="form-help">Stop trading if account drops this % from peak balance</div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="background: var(--light);">
+                        <h4 style="margin-bottom: 16px;">📊 Trading Limits</h4>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Max Consecutive Losses</label>
+                            <input type="number" id="max-consecutive-losses" class="form-input" value="3" min="1" max="10">
+                            <div class="form-help">Pause trading after this many losses in a row</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Max Daily Trades</label>
+                            <input type="number" id="max-daily-trades" class="form-input" value="10" min="1" max="50">
+                            <div class="form-help">Maximum number of trades allowed per day</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Cooldown After Losses (minutes)</label>
+                            <input type="number" id="cooldown-minutes" class="form-input" value="60" min="5" max="1440">
+                            <div class="form-help">Wait time after reaching max consecutive losses</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Emergency Stop Loss (%)</label>
+                            <input type="number" id="emergency-stop" class="form-input" value="50" min="10" max="100">
+                            <div class="form-help">Force close position if it loses this % (disaster protection)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="background: var(--light);">
+                    <h4 style="margin-bottom: 16px;">💳 Margin Protection</h4>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Minimum Margin Level (%)</label>
+                            <input type="number" id="min-margin-level" class="form-input" value="150" min="100" max="500">
+                            <div class="form-help">Don't open new positions if margin level falls below this</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Auto-Deleverage Threshold (%)</label>
+                            <input type="number" id="auto-deleverage" class="form-input" value="120" min="100" max="200">
+                            <div class="form-help">Warning level for potential auto-deleveraging by exchange</div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <div class="alert-icon">💡</div>
+                        <div class="alert-content">
+                            <strong>Margin Level Protection:</strong> Bot monitors your margin level in real-time.<br>
+                            • Above 200%: Safe zone - all features active<br>
+                            • 150-200%: Caution - reduced position sizes<br>
+                            • Below 150%: No new positions opened<br>
+                            • Below 120%: Deleverage warning - consider closing positions
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-success btn-lg" onclick="saveRiskSettings()">
+                        💾 Save Risk Settings
+                    </button>
+                    <button class="btn btn-warning" onclick="resetDailyStats()">
+                        🔄 Reset Daily Stats
+                    </button>
+                    <button class="btn btn-danger" onclick="unlockTrading()">
+                        🔓 Force Unlock (Emergency)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Positions Tab -->
+        <div id="positions" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <span>📊</span> Active Positions Monitor
+                    </h3>
+                    <button class="btn btn-primary" onclick="refreshPositions()">
+                        🔄 Refresh
+                    </button>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Type</th>
+                                <th>Entry</th>
+                                <th>Current</th>
+                                <th>P&L %</th>
+                                <th>P&L USDT</th>
+                                <th>Targets</th>
+                                <th>Breakeven</th>
+                                <th>Trailing</th>
+                                <th>Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="positions-table">
+                            <tr>
+                                <td colspan="11" style="text-align: center; color: var(--text-secondary);">
+                                    No active positions
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profiles Tab -->
+        <div id="profiles" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <span>👤</span> Trading Profile Management
+                    </h3>
+                </div>
+
+                <div class="profile-selector">
+                    <select id="profile-select" class="profile-select">
+                        <option value="">Select a profile...</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="loadProfile()">Load</button>
+                    <button class="btn btn-success" onclick="saveProfile()">Save Current</button>
+                    <button class="btn btn-danger" onclick="deleteProfile()">Delete</button>
+                </div>
+
+                <div class="alert alert-info">
+                    <div class="alert-icon">💡</div>
+                    <div class="alert-content">
+                        Save different trading configurations as profiles for quick switching between strategies.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Tab -->
+        <div id="history" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <span>📈</span> Trading History & Analytics
+                    </h3>
+                    <button class="btn btn-primary" onclick="refreshHistory()">
+                        🔄 Refresh
+                    </button>
+                </div>
+
+                <div class="stats-grid" style="margin-bottom: 24px;">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Profit</div>
+                        <div class="stat-value" id="total-profit" style="color: var(--secondary);">$0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Loss</div>
+                        <div class="stat-value" id="total-loss" style="color: var(--danger);">$0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Net P&L</div>
+                        <div class="stat-value" id="net-pnl">$0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Trades</div>
+                        <div class="stat-value" id="total-trades-stat">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Win Rate</div>
+                        <div class="stat-value" id="win-rate">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Profit Factor</div>
+                        <div class="stat-value" id="profit-factor-stat">0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Avg Win</div>
+                        <div class="stat-value" id="avg-win">$0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Avg Loss</div>
+                        <div class="stat-value" id="avg-loss">$0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Largest Win</div>
+                        <div class="stat-value" id="largest-win">$0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Largest Loss</div>
+                        <div class="stat-value" id="largest-loss">$0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Sharpe Ratio</div>
+                        <div class="stat-value" id="sharpe-ratio">0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Peak Balance</div>
+                        <div class="stat-value" id="peak-balance-stat">$0.00</div>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Symbol</th>
+                                <th>Type</th>
+                                <th>Entry</th>
+                                <th>Exit</th>
+                                <th>P&L</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table">
+                            <tr>
+                                <td colspan="7" style="text-align: center; color: var(--text-secondary);">
+                                    No trading history
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Console Tab -->
+        <div id="console" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <span>💻</span> System Console
+                    </h3>
+                    <div>
+                        <button class="btn btn-outline" onclick="clearConsole()">Clear</button>
+                        <button class="btn btn-outline" onclick="exportLogs()">Export</button>
+                    </div>
+                </div>
+
+                <div class="console" id="console-output">
+                    <div class="console-line console-success">[System] Trading Bot Pro Enhanced initialized</div>
+                    <div class="console-line console-info">[System] Version 2.0.0 PRO - Advanced features active</div>
+                    <div class="console-line console-info">[System] Waiting for configuration...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification System -->
+    <div id="notification-container"></div>
+
+    <!-- JavaScript -->
+    <script>
+        // Global variables
+        let socket = null;
+        let config = {};
+        let botRunning = false;
+        let selectedBreakevenTarget = 1;
+        let selectedPositionSizeType = 'percentage';
+        let currentBalance = null;
+        let positions = [];
+        let riskStatus = {};
+        let marginInfo = {};
+        let forwarderStats = {};
+
+        // Initialize Socket.IO
+        function initSocket() {
+            socket = io();
+            
+            socket.on('connect', () => {
+                addConsoleMessage('[Socket] Connected to server', 'success');
+                socket.emit('request_status');
+                loadInitialData();
+            });
+            
+            socket.on('disconnect', () => {
+                addConsoleMessage('[Socket] Disconnected from server', 'error');
+                updateBotStatus(false);
+            });
+            
+            socket.on('status_update', (status) => {
+                if (status.telegram_bot !== undefined || status.forwarder !== undefined) {
+                    updateBotStatus(status.telegram_bot || status.forwarder);
+                }
+                if (status.trading_locked !== undefined) {
+                    updateTradingStatus(!status.trading_locked);
+                }
+            });
+            
+            socket.on('console_message', (data) => {
+                addConsoleMessage(data.message, data.level);
+            });
+            
+            socket.on('risk_update', (data) => {
+                updateRiskDisplay(data);
+            });
+            
+            socket.on('message', (data) => {
+                if (data.type === 'balance') {
+                    updateBalance(data.balance);
+                } else if (data.type === 'position') {
+                    handlePositionUpdate(data);
+                }
+            });
+            
+            socket.on('forwarder_stats', (data) => {
+                updateForwarderStats(data);
+            });
+            
+            socket.on('position_performance', (data) => {
+                updatePositionPerformance(data);
+            });
+        }
+
+        // API Request Helper
+        async function apiRequest(endpoint, method = 'GET', data = null) {
+            try {
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+
+                if (data) {
+                    options.body = JSON.stringify(data);
+                }
+
+                const response = await fetch(`/api/${endpoint}`, options);
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'API request failed');
+                }
+
+                return result;
+            } catch (error) {
+                console.error('API Error:', error);
+                showNotification(`Error: ${error.message}`, 'error');
+                throw error;
+            }
+        }
+
+        // Load initial data
+        async function loadInitialData() {
+            try {
+                // Load configuration
+                const configData = await apiRequest('config');
+                config = configData;
+                
+                // Update UI with config
+                document.getElementById('api-key').value = config.bybit_api_key || '';
+                document.getElementById('api-secret').value = config.bybit_api_secret || '';
+                document.getElementById('mode-demo').checked = config.use_demo_account !== false;
+                document.getElementById('mode-live').checked = config.use_demo_account === false;
+                document.getElementById('platform-global').checked = config.bybit_platform !== 'bybit';
+                document.getElementById('platform-original').checked = config.bybit_platform === 'bybit';
+                document.getElementById('auto-execute').checked = config.auto_execute_signals !== false;
+                
+                // Load trading settings
+                document.getElementById('leverage').value = config.default_leverage || 10;
+                document.getElementById('leverage-value').textContent = `${config.default_leverage || 10}x`;
+                document.getElementById('fixed-amount').value = config.default_amount || 100;
+                document.getElementById('max-position').value = config.max_position_size || 1000;
+                document.getElementById('auto-tp-sl').checked = config.auto_tp_sl !== false;
+                document.getElementById('auto-breakeven').checked = config.auto_breakeven !== false;
+                
+                // Load position size type
+                selectedPositionSizeType = config.position_size_type || 'fixed';
+                selectPositionSizeType(selectedPositionSizeType);
+                document.getElementById('percentage-slider').value = config.percentage_of_balance || 10;
+                document.getElementById('percentage-value').textContent = `${config.percentage_of_balance || 10}%`;
+                
+                // Load risk status
+                await loadRiskStatus();
+                
+                // Load profiles
+                await loadProfiles();
+                
+                // Check if bot should auto-start
+                if (config.bybit_api_key && config.bybit_api_secret) {
+                    addConsoleMessage('[System] Configuration loaded successfully', 'success');
+                }
+            } catch (error) {
+                console.error('Error loading initial data:', error);
+            }
+        }
+
+        // Bot Control Functions
+        async function startBot() {
+            try {
+                // Validate configuration
+                if (!document.getElementById('api-key').value || !document.getElementById('api-secret').value) {
+                    showNotification('Please configure API keys first!', 'error');
+                    openTab(null, 'setup');
+                    return;
+                }
+
+                // Save config first
+                await saveConfig();
+
+                // Start forwarder with hardcoded admin channel
+                await apiRequest('forwarder/start', 'POST');
+                
+                // Start monitoring
+                await apiRequest('positions/monitoring/start', 'POST');
+                
+                botRunning = true;
+                updateBotStatus(true);
+                
+                document.getElementById('start-bot-btn').disabled = true;
+                document.getElementById('stop-bot-btn').disabled = false;
+                
+                showNotification('✅ Bot started successfully!', 'success');
+                addConsoleMessage('[Bot] Started - Monitoring premium signals', 'success');
+                
+            } catch (error) {
+                console.error('Error starting bot:', error);
+                showNotification('Failed to start bot', 'error');
+            }
+        }
+
+        async function stopBot() {
+            try {
+                // Stop forwarder
+                await apiRequest('forwarder/stop', 'POST');
+                
+                // Stop monitoring
+                await apiRequest('positions/monitoring/stop', 'POST');
+                
+                botRunning = false;
+                updateBotStatus(false);
+                
+                document.getElementById('start-bot-btn').disabled = false;
+                document.getElementById('stop-bot-btn').disabled = true;
+                
+                showNotification('Bot stopped', 'info');
+                addConsoleMessage('[Bot] Stopped', 'warning');
+                
+            } catch (error) {
+                console.error('Error stopping bot:', error);
+            }
+        }
+
+        // Configuration Functions
+        async function saveConfig() {
+            try {
+                const configData = {
+                    bybit_api_key: document.getElementById('api-key').value.trim(),
+                    bybit_api_secret: document.getElementById('api-secret').value.trim(),
+                    use_demo_account: document.getElementById('mode-demo').checked,
+                    bybit_platform: document.getElementById('platform-global').checked ? 'bybitglobal' : 'bybit',
+                    auto_execute_signals: document.getElementById('auto-execute').checked,
+                    position_mode: 'one_way' // Default
+                };
+
+                await apiRequest('config', 'POST', configData);
+                showNotification('✅ Configuration saved!', 'success');
+                addConsoleMessage('[Config] Settings saved', 'success');
+                
+            } catch (error) {
+                console.error('Error saving config:', error);
+            }
+        }
+
+        async function testConnection() {
+            try {
+                updateConnectionStatus('🔄 Testing connection...', 'info');
+                
+                const result = await apiRequest('test-connection', 'POST');
+                
+                if (result.success) {
+                    updateConnectionStatus(`✅ Connected to ${result.platform}`, 'success');
+                    showNotification('Connection successful!', 'success');
+                    
+                    // Load balance and margin info
+                    await refreshBalance();
+                    await refreshMarginInfo();
+                }
+            } catch (error) {
+                updateConnectionStatus('❌ Connection failed', 'danger');
+            }
+        }
+
+        function updateConnectionStatus(message, type) {
+            const statusEl = document.getElementById('connection-status');
+            statusEl.className = `alert alert-${type}`;
+            statusEl.innerHTML = `
+                <div class="alert-icon">${type === 'success' ? '✅' : type === 'danger' ? '❌' : '🔄'}</div>
+                <div class="alert-content">${message}</div>
+            `;
+        }
+
+        // Position Size Type Selection
+        function selectPositionSizeType(type) {
+            selectedPositionSizeType = type;
+            
+            document.querySelectorAll('.position-size-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.querySelector(`.position-size-option[data-type="${type}"]`)?.classList.add('selected');
+            
+            // Show/hide relevant settings
+            if (type === 'fixed') {
+                document.getElementById('fixed-amount-group').style.display = 'block';
+                document.getElementById('percentage-group').style.display = 'none';
+            } else if (type === 'percentage') {
+                document.getElementById('fixed-amount-group').style.display = 'none';
+                document.getElementById('percentage-group').style.display = 'block';
+            } else if (type === 'dynamic') {
+                document.getElementById('fixed-amount-group').style.display = 'none';
+                document.getElementById('percentage-group').style.display = 'block';
+            }
+        }
+
+        // Trading Settings
+        async function saveTradingSettings() {
+            try {
+                const partialTargets = [
+                    parseInt(document.getElementById('partial-tp1').value),
+                    parseInt(document.getElementById('partial-tp2').value),
+                    parseInt(document.getElementById('partial-tp3').value)
+                ];
+                
+                const settings = {
+                    default_leverage: parseInt(document.getElementById('leverage').value),
+                    default_amount: parseFloat(document.getElementById('fixed-amount').value),
+                    position_size_type: selectedPositionSizeType,
+                    percentage_of_balance: parseFloat(document.getElementById('percentage-slider').value),
+                    max_position_size: parseFloat(document.getElementById('max-position').value),
+                    auto_tp_sl: document.getElementById('auto-tp-sl').checked,
+                    auto_breakeven: document.getElementById('auto-breakeven').checked,
+                    use_percentage: selectedPositionSizeType === 'percentage',
+                    risk_percent: 2
+                };
+
+                await apiRequest('trading-settings', 'POST', settings);
+                
+                // Also save advanced risk settings
+                const riskSettings = {
+                    breakeven_target: selectedBreakevenTarget,
+                    trailing_stop_enabled: document.getElementById('trailing-stop').checked,
+                    trailing_stop_percentage: parseFloat(document.getElementById('trailing-stop-percentage').value),
+                    partial_close_enabled: document.getElementById('partial-close').checked,
+                    partial_close_targets: partialTargets,
+                    profit_protection_percentage: parseFloat(document.getElementById('profit-protection').value),
+                    max_open_positions: parseInt(document.getElementById('max-open-positions').value)
+                };
+                
+                await apiRequest('risk/settings', 'POST', riskSettings);
+                
+                showNotification('✅ Trading settings saved!', 'success');
+                
+            } catch (error) {
+                console.error('Error saving trading settings:', error);
+            }
+        }
+
+        // Risk Management
+        async function loadRiskStatus() {
+            try {
+                const status = await apiRequest('risk/status');
+                riskStatus = status;
+                updateRiskDisplay(status);
+            } catch (error) {
+                console.error('Error loading risk status:', error);
+            }
+        }
+
+        function updateRiskDisplay(status) {
+            // Update dashboard
+            document.getElementById('quick-risk').textContent = status.is_locked ? 'LOCKED' : 'Safe';
+            document.getElementById('quick-risk').style.color = status.is_locked ? 'var(--danger)' : 'var(--secondary)';
+            
+            const riskLevel = status.consecutive_losses > 2 ? 'High' : 
+                            status.consecutive_losses > 0 ? 'Medium' : 'Low';
+            document.getElementById('risk-level').textContent = riskLevel;
+            
+            document.getElementById('daily-loss').textContent = `$${status.daily_loss.toFixed(0)}/$${status.limits.max_daily_loss}`;
+            document.getElementById('consecutive-losses').textContent = `${status.consecutive_losses}/${status.limits.max_consecutive_losses}`;
+            document.getElementById('today-trades').textContent = `${status.trades_today}/${status.limits.max_daily_trades}`;
+            
+            // Update progress bars
+            const dailyLossPercent = (status.daily_loss / status.limits.max_daily_loss) * 100;
+            const dailyLossBar = document.getElementById('daily-loss-bar');
+            dailyLossBar.style.width = `${Math.min(dailyLossPercent, 100)}%`;
+            dailyLossBar.className = dailyLossPercent > 80 ? 'progress-bar danger' : 
+                                    dailyLossPercent > 50 ? 'progress-bar warning' : 
+                                    'progress-bar success';
+            
+            // Update trading status
+            updateTradingStatus(!status.is_locked);
+            
+            // Update statistics
+            document.getElementById('quick-winrate').textContent = `${status.win_rate.toFixed(1)}%`;
+            document.getElementById('total-trades').textContent = `${status.total_trades} trades`;
+            document.getElementById('profit-factor').textContent = status.profit_factor.toFixed(2);
+            
+            // Update drawdown
+            document.getElementById('quick-drawdown').textContent = `${status.current_drawdown.toFixed(1)}%`;
+            document.getElementById('peak-balance').textContent = `Peak: $${status.peak_balance.toFixed(0)}`;
+            
+            // Update risk settings inputs
+            document.getElementById('max-daily-loss').value = status.limits.max_daily_loss;
+            document.getElementById('max-weekly-loss').value = status.limits.max_weekly_loss;
+            document.getElementById('max-consecutive-losses').value = status.limits.max_consecutive_losses;
+            document.getElementById('max-daily-trades').value = status.limits.max_daily_trades;
+            document.getElementById('max-loss-percentage').value = status.limits.max_loss_percentage;
+            document.getElementById('cooldown-minutes').value = status.limits.cooldown_minutes || 60;
+            document.getElementById('min-margin-level').value = status.limits.min_margin_level || 150;
+            document.getElementById('auto-deleverage').value = status.limits.auto_deleverage_threshold || 120;
+            document.getElementById('max-drawdown').value = status.limits.drawdown_limit || 15;
+            document.getElementById('emergency-stop').value = status.limits.emergency_stop_loss || 50;
+            document.getElementById('max-open-positions').value = status.limits.max_open_positions || 5;
+            document.getElementById('trailing-stop').checked = status.limits.trailing_stop_enabled || false;
+            document.getElementById('trailing-stop-percentage').value = status.limits.trailing_stop_percentage || 2;
+            document.getElementById('partial-close').checked = status.limits.partial_close_enabled !== false;
+            document.getElementById('profit-protection').value = status.limits.profit_protection_percentage || 80;
+            
+            if (status.limits.partial_close_targets) {
+                document.getElementById('partial-tp1').value = status.limits.partial_close_targets[0] || 25;
+                document.getElementById('partial-tp2').value = status.limits.partial_close_targets[1] || 50;
+                document.getElementById('partial-tp3').value = status.limits.partial_close_targets[2] || 75;
+            }
+            
+            // Update breakeven target selection
+            selectedBreakevenTarget = status.limits.breakeven_target || 1;
+            updateBreakevenSelection();
+            
+            // Update PnL
+            const netPnl = status.total_profit - status.total_loss;
+            document.getElementById('quick-pnl').textContent = `$${netPnl.toFixed(2)}`;
+            document.getElementById('quick-pnl').style.color = netPnl >= 0 ? 'var(--secondary)' : 'var(--danger)';
+            
+            const pnlTrend = document.getElementById('pnl-trend');
+            pnlTrend.className = netPnl >= 0 ? 'quick-action-trend positive' : 'quick-action-trend negative';
+            document.getElementById('pnl-percentage').textContent = currentBalance ? 
+                `${((netPnl / currentBalance) * 100).toFixed(1)}%` : '0%';
+        }
+
+        async function saveRiskSettings() {
+            try {
+                const partialTargets = [
+                    parseInt(document.getElementById('partial-tp1').value),
+                    parseInt(document.getElementById('partial-tp2').value),
+                    parseInt(document.getElementById('partial-tp3').value)
+                ];
+                
+                const settings = {
+                    max_daily_loss: parseFloat(document.getElementById('max-daily-loss').value),
+                    max_weekly_loss: parseFloat(document.getElementById('max-weekly-loss').value),
+                    max_consecutive_losses: parseInt(document.getElementById('max-consecutive-losses').value),
+                    max_daily_trades: parseInt(document.getElementById('max-daily-trades').value),
+                    max_loss_percentage: parseFloat(document.getElementById('max-loss-percentage').value),
+                    cooldown_minutes: parseInt(document.getElementById('cooldown-minutes').value),
+                    breakeven_target: selectedBreakevenTarget,
+                    min_margin_level: parseFloat(document.getElementById('min-margin-level').value),
+                    max_open_positions: parseInt(document.getElementById('max-open-positions').value),
+                    trailing_stop_enabled: document.getElementById('trailing-stop').checked,
+                    trailing_stop_percentage: parseFloat(document.getElementById('trailing-stop-percentage').value),
+                    partial_close_enabled: document.getElementById('partial-close').checked,
+                    partial_close_targets: partialTargets,
+                    emergency_stop_loss: parseFloat(document.getElementById('emergency-stop').value),
+                    profit_protection_percentage: parseFloat(document.getElementById('profit-protection').value),
+                    auto_deleverage_threshold: parseFloat(document.getElementById('auto-deleverage').value),
+                    drawdown_limit: parseFloat(document.getElementById('max-drawdown').value)
+                };
+
+                await apiRequest('risk/settings', 'POST', settings);
+                showNotification('✅ Risk settings saved!', 'success');
+                await loadRiskStatus();
+                
+            } catch (error) {
+                console.error('Error saving risk settings:', error);
+            }
+        }
+
+        async function resetDailyStats() {
+            if (!confirm('Reset daily statistics?')) return;
+            
+            try {
+                await apiRequest('risk/reset-daily', 'POST');
+                showNotification('Daily stats reset', 'success');
+                await loadRiskStatus();
+            } catch (error) {
+                console.error('Error resetting stats:', error);
+            }
+        }
+
+        async function unlockTrading() {
+            if (!confirm('⚠️ Force unlock trading? This will bypass safety limits!')) return;
+            
+            try {
+                await apiRequest('risk/unlock', 'POST');
+                showNotification('Trading unlocked', 'warning');
+                await loadRiskStatus();
+            } catch (error) {
+                console.error('Error unlocking trading:', error);
+            }
+        }
+
+        // Margin Management
+        async function refreshMarginInfo() {
+            try {
+                const result = await apiRequest('margin-info');
+                
+                if (result.success) {
+                    marginInfo = result;
+                    updateMarginDisplay(result);
+                }
+            } catch (error) {
+                console.error('Error refreshing margin info:', error);
+            }
+        }
+
+        function updateMarginDisplay(info) {
+            // Margin level
+            const marginLevel = info.margin_level || 100;
+            document.getElementById('margin-level').textContent = `${marginLevel.toFixed(0)}%`;
+            
+            const marginLevelBar = document.getElementById('margin-level-bar');
+            marginLevelBar.style.width = `${Math.min(marginLevel / 2, 100)}%`;
+            marginLevelBar.className = marginLevel < 150 ? 'margin-item-fill danger' : 
+                                      marginLevel < 200 ? 'margin-item-fill warning' : 
+                                      'margin-item-fill safe';
+            
+            // Margin used
+            const marginUsed = info.margin_used || 0;
+            const marginUsagePercent = info.margin_usage_percentage || 0;
+            document.getElementById('margin-used').textContent = `$${marginUsed.toFixed(2)}`;
+            
+            const marginUsedBar = document.getElementById('margin-used-bar');
+            marginUsedBar.style.width = `${Math.min(marginUsagePercent, 100)}%`;
+            marginUsedBar.className = marginUsagePercent > 80 ? 'margin-item-fill danger' : 
+                                     marginUsagePercent > 50 ? 'margin-item-fill warning' : 
+                                     'margin-item-fill safe';
+            
+            // Free margin
+            const freeMargin = info.total_available || 0;
+            document.getElementById('free-margin').textContent = `$${freeMargin.toFixed(2)}`;
+            
+            const freeMarginPercent = info.total_wallet > 0 ? (freeMargin / info.total_wallet * 100) : 100;
+            const freeMarginBar = document.getElementById('free-margin-bar');
+            freeMarginBar.style.width = `${freeMarginPercent}%`;
+            freeMarginBar.className = freeMarginPercent < 20 ? 'margin-item-fill danger' : 
+                                     freeMarginPercent < 50 ? 'margin-item-fill warning' : 
+                                     'margin-item-fill safe';
+            
+            // Deleverage risk
+            const deleverageRisk = info.needs_deleverage ? 'HIGH' : 
+                                  marginLevel < 150 ? 'Medium' : 'Safe';
+            document.getElementById('deleverage-risk').textContent = deleverageRisk;
+            
+            const deleverageBar = document.getElementById('deleverage-bar');
+            const deleveragePercent = Math.max(0, Math.min(100, (marginLevel - 100) / 2));
+            deleverageBar.style.width = `${deleveragePercent}%`;
+            deleverageBar.className = marginLevel < 120 ? 'margin-item-fill danger' : 
+                                     marginLevel < 150 ? 'margin-item-fill warning' : 
+                                     'margin-item-fill safe';
+        }
+
+        // Breakeven Target Selection
+        function selectBreakevenTarget(target) {
+            selectedBreakevenTarget = target;
+            updateBreakevenSelection();
+        }
+
+        function updateBreakevenSelection() {
+            document.querySelectorAll('.breakeven-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.querySelector(`.breakeven-option[data-target="${selectedBreakevenTarget}"]`)?.classList.add('selected');
+        }
+
+        // Toggle Functions
+        function toggleTrailingStop() {
+            const enabled = document.getElementById('trailing-stop').checked;
+            document.getElementById('trailing-stop-percentage').style.display = enabled ? 'block' : 'none';
+        }
+
+        function togglePartialClose() {
+            const enabled = document.getElementById('partial-close').checked;
+            document.getElementById('partial-close-settings').style.display = enabled ? 'grid' : 'none';
+        }
+
+        // Position Management
+        async function refreshPositions() {
+            try {
+                const result = await apiRequest('positions');
+                displayPositions(result.positions || []);
+                
+                // Update position count
+                const positionCount = result.positions ? result.positions.length : 0;
+                document.getElementById('active-positions').textContent = positionCount;
+                document.getElementById('quick-positions').textContent = `${positionCount}/${riskStatus.limits?.max_open_positions || 5}`;
+                
+                // Update positions badge
+                const badge = document.getElementById('positions-badge');
+                if (positionCount > 0) {
+                    badge.textContent = positionCount;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+                
+            } catch (error) {
+                console.error('Error refreshing positions:', error);
+            }
+        }
+
+        function displayPositions(positionsList) {
+            positions = positionsList;
+            const tbody = document.getElementById('positions-table');
+            
+            if (positions.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="11" style="text-align: center; color: var(--text-secondary);">
+                            No active positions
+                        </td>
+                    </tr>
+                `;
+                document.getElementById('positions-value').textContent = '$0';
+                return;
+            }
+            
+            let totalValue = 0;
+            
+            tbody.innerHTML = positions.map(pos => {
+                const pnlClass = pos.pnl_percentage > 0 ? 'positive' : 'negative';
+                const pnlColor = pos.pnl_percentage > 0 ? 'var(--secondary)' : 'var(--danger)';
+                totalValue += pos.margin_used * pos.leverage;
+                
+                return `
+                    <tr>
+                        <td><strong>${pos.symbol}</strong></td>
+                        <td><span class="risk-indicator ${pos.type === 'long' ? 'safe' : 'warning'}">${pos.type.toUpperCase()}</span></td>
+                        <td>${pos.entry}</td>
+                        <td>${pos.current_price || pos.last_price || '-'}</td>
+                        <td style="color: ${pnlColor};">${pos.pnl_percentage > 0 ? '+' : ''}${pos.pnl_percentage}%</td>
+                        <td style="color: ${pnlColor};">$${pos.pnl_usdt.toFixed(2)}</td>
+                        <td>${pos.targets}</td>
+                        <td>${pos.sl_breakeven ? '✅' : '❌'}</td>
+                        <td>${pos.trailing_stop ? '🔄' : '⏸️'}</td>
+                        <td>${pos.created}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" onclick="moveToBreakeven('${pos.symbol}')">BE</button>
+                            <button class="btn btn-sm btn-danger" onclick="closePosition('${pos.symbol}')">Close</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            document.getElementById('positions-value').textContent = `$${totalValue.toFixed(0)}`;
+        }
+
+        async function moveToBreakeven(symbol) {
+            try {
+                await apiRequest('positions/breakeven', 'POST', { symbol });
+                showNotification(`Breakeven set for ${symbol}`, 'success');
+                await refreshPositions();
+            } catch (error) {
+                console.error('Error setting breakeven:', error);
+            }
+        }
+
+        async function closePosition(symbol) {
+            if (!confirm(`Close position ${symbol}?`)) return;
+            
+            try {
+                await apiRequest('positions/close', 'POST', { symbol });
+                showNotification(`Position ${symbol} closed`, 'success');
+                await refreshPositions();
+            } catch (error) {
+                console.error('Error closing position:', error);
+            }
+        }
+
+        function handlePositionUpdate(data) {
+            if (data.action === 'added') {
+                showNotification(`New position: ${data.position.symbol}`, 'info');
+            } else if (data.action === 'breakeven') {
+                showNotification(`Breakeven activated: ${data.symbol}`, 'success');
+            } else if (data.action === 'targets_hit') {
+                showNotification(`Targets hit: ${data.symbol} - ${data.targets.join(', ')}`, 'success');
+            }
+            refreshPositions();
+        }
+
+        function updatePositionPerformance(data) {
+            // Update position in real-time
+            const position = positions.find(p => p.symbol === data.symbol);
+            if (position) {
+                position.pnl_percentage = data.pnl_percentage;
+                position.current_price = data.current_price;
+                displayPositions(positions);
+            }
+        }
+
+        // Balance Management
+        async function refreshBalance() {
+            try {
+                const result = await apiRequest('balance');
+                updateBalance(result);
+            } catch (error) {
+                console.error('Error refreshing balance:', error);
+            }
+        }
+
+        function updateBalance(balance) {
+            currentBalance = balance;
+            const available = balance.totalAvailableBalance || 0;
+            const wallet = balance.totalWalletBalance || 0;
+            
+            document.getElementById('quick-balance').textContent = `$${available.toFixed(2)}`;
+            
+            // Calculate balance change
+            const changePercent = wallet > 0 ? ((available - wallet) / wallet * 100) : 0;
+            const balanceTrend = document.getElementById('balance-trend');
+            balanceTrend.className = changePercent >= 0 ? 'quick-action-trend positive' : 'quick-action-trend negative';
+            document.getElementById('balance-change').textContent = `${Math.abs(changePercent).toFixed(1)}%`;
+        }
+
+        // Forwarder Statistics
+        function updateForwarderStats(stats) {
+            forwarderStats = stats;
+            
+            const signalStats = document.getElementById('signal-stats');
+            const successRate = stats.signals_received > 0 ? 
+                (stats.signals_executed / stats.signals_received * 100).toFixed(0) : 0;
+            
+            signalStats.innerHTML = `
+                <span class="risk-indicator ${successRate > 70 ? 'safe' : successRate > 50 ? 'warning' : 'danger'}">
+                    ${stats.signals_executed}/${stats.signals_received}
+                </span>
+            `;
+        }
+
+        // Profile Management
+        async function loadProfiles() {
+            try {
+                const result = await apiRequest('profiles');
+                const select = document.getElementById('profile-select');
+                
+                select.innerHTML = '<option value="">Select a profile...</option>';
+                
+                if (result.profiles && result.profiles.length > 0) {
+                    result.profiles.forEach(profile => {
+                        const option = document.createElement('option');
+                        option.value = profile;
+                        option.textContent = profile;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading profiles:', error);
+            }
+        }
+
+        async function saveProfile() {
+            const name = prompt('Enter profile name:');
+            if (!name) return;
+            
+            try {
+                await apiRequest('profiles/save', 'POST', { name });
+                showNotification(`Profile "${name}" saved`, 'success');
+                await loadProfiles();
+            } catch (error) {
+                console.error('Error saving profile:', error);
+            }
+        }
+
+        async function loadProfile() {
+            const select = document.getElementById('profile-select');
+            const name = select.value;
+            
+            if (!name) {
+                showNotification('Please select a profile', 'warning');
+                return;
+            }
+            
+            try {
+                await apiRequest('profiles/load', 'POST', { name });
+                showNotification(`Profile "${name}" loaded`, 'success');
+                await loadInitialData();
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        async function deleteProfile() {
+            const select = document.getElementById('profile-select');
+            const name = select.value;
+            
+            if (!name) {
+                showNotification('Please select a profile', 'warning');
+                return;
+            }
+            
+            if (!confirm(`Delete profile "${name}"?`)) return;
+            
+            try {
+                await apiRequest('profiles/delete', 'POST', { name });
+                showNotification(`Profile "${name}" deleted`, 'success');
+                await loadProfiles();
+            } catch (error) {
+                console.error('Error deleting profile:', error);
+            }
+        }
+
+        // History
+        async function refreshHistory() {
+            try {
+                // Load statistics
+                const stats = await apiRequest('statistics');
+                
+                document.getElementById('total-profit').textContent = `$${stats.statistics.total_profit.toFixed(2)}`;
+                document.getElementById('total-loss').textContent = `$${stats.statistics.total_loss.toFixed(2)}`;
+                document.getElementById('net-pnl').textContent = `$${stats.statistics.net_pnl.toFixed(2)}`;
+                document.getElementById('total-trades-stat').textContent = stats.statistics.total_trades;
+                document.getElementById('win-rate').textContent = `${stats.statistics.win_rate.toFixed(1)}%`;
+                document.getElementById('profit-factor-stat').textContent = stats.statistics.profit_factor.toFixed(2);
+                document.getElementById('avg-win').textContent = `$${stats.statistics.average_win.toFixed(2)}`;
+                document.getElementById('avg-loss').textContent = `$${stats.statistics.average_loss.toFixed(2)}`;
+                document.getElementById('largest-win').textContent = `$${stats.statistics.largest_win.toFixed(2)}`;
+                document.getElementById('largest-loss').textContent = `$${stats.statistics.largest_loss.toFixed(2)}`;
+                document.getElementById('sharpe-ratio').textContent = stats.statistics.sharpe_ratio.toFixed(2);
+                document.getElementById('peak-balance-stat').textContent = `$${stats.statistics.peak_balance.toFixed(2)}`;
+                
+                // Load trade history
+                const history = await apiRequest('history');
+                
+                if (history.history && history.history.length > 0) {
+                    const tbody = document.getElementById('history-table');
+                    tbody.innerHTML = history.history.reverse().map(trade => {
+                        const date = new Date(trade.timestamp).toLocaleString();
+                        const resultClass = trade.is_win ? 'safe' : 'danger';
+                        const resultText = trade.is_win ? 'WIN' : 'LOSS';
+                        const pnlColor = trade.profit_loss > 0 ? 'var(--secondary)' : 'var(--danger)';
+                        
+                        return `
+                            <tr>
+                                <td>${date}</td>
+                                <td>${trade.symbol}</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td style="color: ${pnlColor};">$${trade.profit_loss.toFixed(2)}</td>
+                                <td><span class="risk-indicator ${resultClass}">${resultText}</span></td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+                
+            } catch (error) {
+                console.error('Error refreshing history:', error);
+            }
+        }
+
+        // UI Updates
+        function updateBotStatus(isActive) {
+            const statusEl = document.getElementById('bot-status');
+            if (isActive) {
+                statusEl.className = 'status-indicator active';
+                statusEl.innerHTML = '<div class="pulse green"></div><span>Bot Active</span>';
+            } else {
+                statusEl.className = 'status-indicator inactive';
+                statusEl.innerHTML = '<div class="pulse red"></div><span>Bot Offline</span>';
+            }
+        }
+
+        function updateTradingStatus(isAllowed) {
+            const statusEl = document.getElementById('trading-status');
+            if (isAllowed) {
+                statusEl.className = 'status-indicator active';
+                statusEl.innerHTML = '<div class="pulse green"></div><span>Trading: Active</span>';
+            } else {
+                statusEl.className = 'status-indicator warning';
+                statusEl.innerHTML = '<div class="pulse yellow"></div><span>Trading: Locked</span>';
+            }
+        }
+
+        // Console
+        function addConsoleMessage(message, level = 'info') {
+            const console = document.getElementById('console-output');
+            const timestamp = new Date().toLocaleTimeString();
+            const line = document.createElement('div');
+            line.className = `console-line console-${level}`;
+            line.textContent = `[${timestamp}] ${message}`;
+            console.appendChild(line);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function clearConsole() {
+            document.getElementById('console-output').innerHTML = '';
+            addConsoleMessage('[System] Console cleared', 'info');
+        }
+
+        function exportLogs() {
+            const content = document.getElementById('console-output').innerText;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `trading-bot-logs-${new Date().toISOString()}.txt`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Tab Navigation
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let content of tabContents) {
+                content.classList.remove('active');
+            }
+            
+            const tabButtons = document.getElementsByClassName('tab-btn');
+            for (let button of tabButtons) {
+                button.classList.remove('active');
+            }
+            
+            document.getElementById(tabName).classList.add('active');
+            if (evt && evt.currentTarget) {
+                evt.currentTarget.classList.add('active');
+            }
+            
+            // Load tab-specific data
+            if (tabName === 'positions') {
+                refreshPositions();
+            } else if (tabName === 'history') {
+                refreshHistory();
+            } else if (tabName === 'risk') {
+                loadRiskStatus();
+            }
+        }
+
+        // Notifications
+        function showNotification(message, type = 'info') {
+            const container = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            
+            const colors = {
+                'success': 'var(--success-bg)',
+                'error': 'var(--danger-bg)',
+                'warning': 'var(--warning-bg)',
+                'info': 'var(--info-bg)'
+            };
+            
+            const textColors = {
+                'success': 'var(--success-text)',
+                'error': 'var(--danger-text)',
+                'warning': 'var(--warning-text)',
+                'info': 'var(--info-text)'
+            };
+            
+            notification.style.background = colors[type] || colors.info;
+            notification.style.color = textColors[type] || textColors.info;
+            notification.innerHTML = message;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => {
+                    container.removeChild(notification);
+                }, 300);
+            }, 5000);
+        }
+
+        // Event Listeners
+        document.getElementById('auto-execute').addEventListener('change', (e) => {
+            document.getElementById('auto-execute-status').textContent = e.target.checked ? 'Enabled' : 'Disabled';
+            document.getElementById('auto-execute-status').style.color = e.target.checked ? 'var(--secondary)' : 'var(--text-secondary)';
+        });
+
+        document.getElementById('leverage').addEventListener('input', (e) => {
+            document.getElementById('leverage-value').textContent = `${e.target.value}x`;
+        });
+
+        document.getElementById('percentage-slider').addEventListener('input', (e) => {
+            document.getElementById('percentage-value').textContent = `${e.target.value}%`;
+        });
+
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleString();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initSocket();
+            updateTime();
+            setInterval(updateTime, 1000);
+            
+            // Auto-refresh
+            setInterval(() => {
+                if (botRunning) {
+                    refreshPositions();
+                    refreshBalance();
+                    refreshMarginInfo();
+                }
+            }, 30000);
+            
+            // Initial UI setup
+            toggleTrailingStop();
+            togglePartialClose();
+            
+            // Check connection on startup
+            setTimeout(() => {
+                if (config.bybit_api_key && config.bybit_api_secret) {
+                    testConnection();
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
